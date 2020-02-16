@@ -1,0 +1,5 @@
+.vs
+lib/
+node_modules
+reportgeneratortool
+*.js
