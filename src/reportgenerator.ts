@@ -26,7 +26,8 @@ async function run() {
     } catch (error) {
       core.setFailed(".NET Core SDK is not available.");
       core.info("Please install with the following command in your YAML file:");
-      core.info("- uses: actions/setup-dotnet@v1");
+      core.info("- name: Setup .NET Core");
+      core.info("  uses: actions/setup-dotnet@v1");
       core.info("  with");
       core.info("    dotnet-version: '3.1.100'");
       return;
