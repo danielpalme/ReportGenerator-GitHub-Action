@@ -17,7 +17,7 @@ inputs:
   sourcedirs:
     description: 'Optional directories which contain the corresponding source code (separated by semicolon). The source directories are used if coverage report contains classes without path information.'
     required: false
-    default: 'coveragereport'
+    default: ''
   historydir:
     description: 'Optional directory for storing persistent coverage information. Can be used in future reports to show coverage evolution.'
     required: false
