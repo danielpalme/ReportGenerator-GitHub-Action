@@ -1,4 +1,4 @@
-name: 'reportgenerator'
+name: 'ReportGenerator'
 author: 'danielpalme'
 description: 'Creates human readable coverage reports in various formats.'
 inputs:

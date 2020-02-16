@@ -1,5 +1,5 @@
 {
-  "name": "reportgenerator",
+  "name": "ReportGenerator",
   "version": "4.4.7",
   "description": "",
   "main": "lib/reportgenerator.js",

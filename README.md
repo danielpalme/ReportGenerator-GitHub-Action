@@ -6,7 +6,7 @@
 
 ```yml
 - name: ReportGenerator
-  uses: danielpalme/reportgenerator@v4.4.7
+  uses: danielpalme/ReportGenerator-GitHub-Action@v4.4.7
   with:
     reports: 'coverage.xml' # REQUIRED # The coverage reports that should be parsed (separated by semicolon). Globbing is supported.
     targetdir: 'coveragereport' # REQUIRED # The directory where the generated report should be saved.
