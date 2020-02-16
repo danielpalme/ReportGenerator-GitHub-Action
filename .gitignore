@@ -2,4 +2,4 @@
 lib/
 node_modules
 reportgeneratortool
-*.js
+src/*.js
