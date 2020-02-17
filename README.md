@@ -5,6 +5,10 @@
 ## Usage
 
 ```yml
+- name: Setup .NET Core # Required to execute ReportGenerator
+  uses: actions/setup-dotnet@v1
+  with:
+    dotnet-version: 3.1.101
 - name: ReportGenerator
   uses: danielpalme/ReportGenerator-GitHub-Action@v4.4.7
   with:

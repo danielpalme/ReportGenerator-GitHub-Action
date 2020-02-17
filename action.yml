@@ -1,6 +1,6 @@
 name: 'ReportGenerator'
 author: 'danielpalme'
-description: 'Creates human readable coverage reports in various formats.'
+description: 'Creates coverage reports from tools like OpenCover, dotCover, Visual Studio, NCover, Cobertura, JaCoCo, Clover, gcov or lcov'
 inputs:
   reports:
     description: 'The coverage reports that should be parsed (separated by semicolon). Globbing is supported.'
