@@ -2,7 +2,7 @@ import * as core from '@actions/core';
 import * as exec from '@actions/exec';
 import * as fs from 'fs';
 
-const VERSION = '4.5.0';
+const VERSION = '4.5.1';
 
 async function run() {
   try {
@@ -29,7 +29,7 @@ async function run() {
       core.info("- name: Setup .NET Core");
       core.info("  uses: actions/setup-dotnet@v1");
       core.info("  with");
-      core.info("    dotnet-version: '3.1.101'");
+      core.info("    dotnet-version: '3.1.102'");
       return;
     }
     
@@ -81,6 +81,7 @@ async function run() {
         '-classfilters:' + (core.getInput('classfilters') || ''),
         '-filefilters:' + (core.getInput('filefilters') || ''),
         '-verbosity:' + (core.getInput('verbosity') || ''),
+        '-title:' + (core.getInput('title') || ''),
         '-tag:' + (core.getInput('tag') || '')
       ];
 

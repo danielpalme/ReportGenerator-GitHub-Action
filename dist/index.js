@@ -973,7 +973,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const core = __importStar(__webpack_require__(470));
 const exec = __importStar(__webpack_require__(986));
 const fs = __importStar(__webpack_require__(747));
-const VERSION = '4.5.0';
+const VERSION = '4.5.1';
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
@@ -995,7 +995,7 @@ function run() {
                 core.info("- name: Setup .NET Core");
                 core.info("  uses: actions/setup-dotnet@v1");
                 core.info("  with");
-                core.info("    dotnet-version: '3.1.101'");
+                core.info("    dotnet-version: '3.1.102'");
                 return;
             }
             core.info("Detected .NET Core SDK version '" + output + "'");
@@ -1036,6 +1036,7 @@ function run() {
                     '-classfilters:' + (core.getInput('classfilters') || ''),
                     '-filefilters:' + (core.getInput('filefilters') || ''),
                     '-verbosity:' + (core.getInput('verbosity') || ''),
+                    '-title:' + (core.getInput('title') || ''),
                     '-tag:' + (core.getInput('tag') || '')
                 ];
                 resultCode = yield exec.exec('reportgeneratortool/reportgenerator', args, {

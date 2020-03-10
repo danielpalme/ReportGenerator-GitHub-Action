@@ -8,10 +8,10 @@
 - name: Setup .NET Core # Required to execute ReportGenerator
   uses: actions/setup-dotnet@v1
   with:
-    dotnet-version: 3.1.101
+    dotnet-version: 3.1.102
 
 - name: ReportGenerator
-  uses: danielpalme/ReportGenerator-GitHub-Action@v4.5.0
+  uses: danielpalme/ReportGenerator-GitHub-Action@v4.5.1
   with:
     reports: 'coverage.xml' # REQUIRED # The coverage reports that should be parsed (separated by semicolon). Globbing is supported.
     targetdir: 'coveragereport' # REQUIRED # The directory where the generated report should be saved.
@@ -23,5 +23,6 @@
     classfilters: '+' # Optional list of classes that should be included or excluded in the report. Exclusion filters take precedence over inclusion filters. Wildcards are allowed.
     filefilters: '+' # Optional list of files that should be included or excluded in the report. Exclusion filters take precedence over inclusion filters. Wildcards are allowed.
     verbosity: 'Info' # The verbosity level of the log messages. Values: Verbose, Info, Warning, Error, Off
+    title: '' # Optional title.
     tag: '${{ github.run_number }}_${{ github.run_id }}' # Optional tag or build version.
 ```
