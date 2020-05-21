@@ -8,7 +8,7 @@
 - name: Setup .NET Core # Required to execute ReportGenerator
   uses: actions/setup-dotnet@v1
   with:
-    dotnet-version: 3.1.202
+    dotnet-version: 3.1.300
 
 - name: ReportGenerator
   uses: danielpalme/ReportGenerator-GitHub-Action@4.5.8
