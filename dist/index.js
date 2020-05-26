@@ -973,7 +973,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const core = __importStar(__webpack_require__(470));
 const exec = __importStar(__webpack_require__(986));
 const fs = __importStar(__webpack_require__(747));
-const VERSION = '4.5.8';
+const VERSION = '4.6.0';
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
