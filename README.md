@@ -11,7 +11,7 @@
     dotnet-version: 3.1.302
 
 - name: ReportGenerator
-  uses: danielpalme/ReportGenerator-GitHub-Action@4.6.3
+  uses: danielpalme/ReportGenerator-GitHub-Action@4.6.4
   with:
     reports: 'coverage.xml' # REQUIRED # The coverage reports that should be parsed (separated by semicolon). Globbing is supported.
     targetdir: 'coveragereport' # REQUIRED # The directory where the generated report should be saved.
@@ -25,4 +25,5 @@
     verbosity: 'Info' # The verbosity level of the log messages. Values: Verbose, Info, Warning, Error, Off
     title: '' # Optional title.
     tag: '${{ github.run_number }}_${{ github.run_id }}' # Optional tag or build version.
+    customSettings: '' # Optional custom settings (separated by semicolon). See: https://github.com/danielpalme/ReportGenerator/wiki/Settings.
 ```

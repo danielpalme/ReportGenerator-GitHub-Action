@@ -973,7 +973,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const core = __importStar(__webpack_require__(470));
 const exec = __importStar(__webpack_require__(986));
 const fs = __importStar(__webpack_require__(747));
-const VERSION = '4.6.3';
+const VERSION = '4.6.4';
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
@@ -1039,6 +1039,12 @@ function run() {
                     '-title:' + (core.getInput('title') || ''),
                     '-tag:' + (core.getInput('tag') || '')
                 ];
+                const customSettings = (core.getInput('customSettings') || '');
+                if (customSettings.length > 0) {
+                    customSettings.split(';').forEach(setting => {
+                        args.push(setting.trim());
+                    });
+                }
                 resultCode = yield exec.exec('reportgeneratortool/reportgenerator', args, {
                     listeners: {
                         stdout: (data) => {

@@ -2,7 +2,7 @@ import * as core from '@actions/core';
 import * as exec from '@actions/exec';
 import * as fs from 'fs';
 
-const VERSION = '4.6.3';
+const VERSION = '4.6.4';
 
 async function run() {
   try {
@@ -84,6 +84,14 @@ async function run() {
         '-title:' + (core.getInput('title') || ''),
         '-tag:' + (core.getInput('tag') || '')
       ];
+
+      const customSettings = (core.getInput('customSettings') || '');
+
+      if (customSettings.length > 0) {
+          customSettings.split(';').forEach(setting => {
+              args.push(setting.trim());
+          });
+      }
 
       resultCode = await exec.exec(
         'reportgeneratortool/reportgenerator',
