@@ -46,6 +46,10 @@ inputs:
     description: 'Optional tag or build version.'
     required: false
     default: '${{ github.run_number }}_${{ github.run_id }}'
+  customSettings:
+    description: 'Optional custom settings (separated by semicolon). See: https://github.com/danielpalme/ReportGenerator/wiki/Settings'
+    required: false
+    default: ''
 runs:
   using: 'node12'
   main: 'dist/index.js'
