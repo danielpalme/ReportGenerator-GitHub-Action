@@ -2,7 +2,7 @@ import * as core from '@actions/core';
 import * as exec from '@actions/exec';
 import * as fs from 'fs';
 
-const VERSION = '4.6.7';
+const VERSION = '4.7.0';
 
 async function run() {
   try {
