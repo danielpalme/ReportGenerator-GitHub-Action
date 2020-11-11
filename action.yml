@@ -42,6 +42,10 @@ inputs:
     description: 'The verbosity level of the log messages. Values: Verbose, Info, Warning, Error, Off'
     required: false
     default: 'Info'
+  title:
+    description: 'Optional title.'
+    required: false
+    default: ''
   tag:
     description: 'Optional tag or build version.'
     required: false
