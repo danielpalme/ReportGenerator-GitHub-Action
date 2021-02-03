@@ -2,7 +2,7 @@ import * as core from '@actions/core';
 import * as exec from '@actions/exec';
 import * as fs from 'fs';
 
-const VERSION = '4.8.4';
+const VERSION = '4.8.5';
 
 async function run() {
   try {
@@ -29,7 +29,7 @@ async function run() {
       core.info("- name: Setup .NET Core");
       core.info("  uses: actions/setup-dotnet@v1");
       core.info("  with");
-      core.info("    dotnet-version: '5.0.101'");
+      core.info("    dotnet-version: '5.0.102'");
       return;
     }
     
