@@ -1088,7 +1088,7 @@ function run() {
                 core.info("- name: Setup .NET Core");
                 core.info("  uses: actions/setup-dotnet@v1");
                 core.info("  with");
-                core.info("    dotnet-version: '5.0.102'");
+                core.info("    dotnet-version: '5.0.103'");
                 return;
             }
             core.info("Detected .NET Core SDK version '" + output + "'");

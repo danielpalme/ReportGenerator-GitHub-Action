@@ -8,7 +8,7 @@
 - name: Setup .NET Core # Required to execute ReportGenerator
   uses: actions/setup-dotnet@v1
   with:
-    dotnet-version: 5.0.102
+    dotnet-version: 5.0.103
 
 - name: ReportGenerator
   uses: danielpalme/ReportGenerator-GitHub-Action@4.8.5
@@ -26,4 +26,10 @@
     title: '' # Optional title.
     tag: '${{ github.run_number }}_${{ github.run_id }}' # Optional tag or build version.
     customSettings: '' # Optional custom settings (separated by semicolon). See: https://github.com/danielpalme/ReportGenerator/wiki/Settings.
+
+- name: Upload coverage report artifact
+  uses: actions/upload-artifact@v1.0.0
+  with:
+    name: CoverageReport # Artifact name        
+    path: coveragereport # Directory containing files to upload
 ```
