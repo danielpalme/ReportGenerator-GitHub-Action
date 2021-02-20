@@ -1100,7 +1100,7 @@ function run() {
                 output = '';
                 resultCode = 0;
                 try {
-                    resultCode = yield exec.exec('dotnet', ['tool', 'install', 'dotnet-reportgenerator-globaltool', '--tool-path', 'reportgeneratortool', '--version', VERSION], {
+                    resultCode = yield exec.exec('dotnet', ['tool', 'install', 'dotnet-reportgenerator-globaltool', '--tool-path', 'reportgeneratortool', '--version', VERSION, '--ignore-failed-sources'], {
                         listeners: {
                             stdout: (data) => {
                                 output += data.toString();

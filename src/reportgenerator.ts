@@ -46,7 +46,7 @@ async function run() {
       try {
         resultCode = await exec.exec(
           'dotnet',
-          ['tool', 'install', 'dotnet-reportgenerator-globaltool', '--tool-path', 'reportgeneratortool', '--version', VERSION],
+          ['tool', 'install', 'dotnet-reportgenerator-globaltool', '--tool-path', 'reportgeneratortool', '--version', VERSION, '--ignore-failed-sources'],
           {
             listeners: {
               stdout: (data: Buffer) => {
