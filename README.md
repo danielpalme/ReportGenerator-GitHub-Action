@@ -11,7 +11,7 @@
     dotnet-version: 5.0.103
 
 - name: ReportGenerator
-  uses: danielpalme/ReportGenerator-GitHub-Action@4.8.6
+  uses: danielpalme/ReportGenerator-GitHub-Action@4.8.7
   with:
     reports: 'coverage.xml' # REQUIRED # The coverage reports that should be parsed (separated by semicolon). Globbing is supported.
     targetdir: 'coveragereport' # REQUIRED # The directory where the generated report should be saved.
