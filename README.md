@@ -8,7 +8,7 @@
 - name: Setup .NET Core # Required to execute ReportGenerator
   uses: actions/setup-dotnet@v1
   with:
-    dotnet-version: 5.0.202
+    dotnet-version: 5.0.x
 
 - name: ReportGenerator
   uses: danielpalme/ReportGenerator-GitHub-Action@4.8.8
@@ -18,6 +18,7 @@
     reporttypes: 'HtmlInline;Cobertura' # The output formats and scope (separated by semicolon) Values: Badges, Clover, Cobertura, CsvSummary, Html, HtmlChart, HtmlInline, HtmlInline_AzurePipelines, HtmlInline_AzurePipelines_Dark, HtmlSummary, JsonSummary, Latex, LatexSummary, lcov, MHtml, PngChart, SonarQube, TeamCitySummary, TextSummary, Xml, XmlSummary
     sourcedirs: '' # Optional directories which contain the corresponding source code (separated by semicolon). The source directories are used if coverage report contains classes without path information.
     historydir: '' # Optional directory for storing persistent coverage information. Can be used in future reports to show coverage evolution.
+    toolpath: 'reportgeneratortool' # Default directory for installing the dotnet tool.
     plugins: '' # Optional plugin files for custom reports or custom history storage (separated by semicolon).
     assemblyfilters: '+*' # Optional list of assemblies that should be included or excluded in the report. Exclusion filters take precedence over inclusion filters. Wildcards are allowed.
     classfilters: '+*' # Optional list of classes that should be included or excluded in the report. Exclusion filters take precedence over inclusion filters. Wildcards are allowed.
@@ -28,7 +29,7 @@
     customSettings: '' # Optional custom settings (separated by semicolon). See: https://github.com/danielpalme/ReportGenerator/wiki/Settings.
 
 - name: Upload coverage report artifact
-  uses: actions/upload-artifact@v1.0.0
+  uses: actions/upload-artifact@v2
   with:
     name: CoverageReport # Artifact name        
     path: coveragereport # Directory containing files to upload

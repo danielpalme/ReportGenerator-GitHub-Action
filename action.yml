@@ -22,6 +22,10 @@ inputs:
     description: 'Optional directory for storing persistent coverage information. Can be used in future reports to show coverage evolution.'
     required: false
     default: ''
+  toolpath:
+    description: 'Default directory for installing the dotnet tool.'
+    required: false
+    default: 'reportgeneratortool'
   plugins:
     description: 'Optional plugin files for custom reports or custom history storage (separated by semicolon).'
     required: false

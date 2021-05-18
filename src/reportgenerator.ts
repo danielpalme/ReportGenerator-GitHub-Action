@@ -10,6 +10,7 @@ async function run() {
 
     let output = '';
     let resultCode = 0;
+    let toolpath = core.getInput('toolpath');
 
     try {
       resultCode = await exec.exec(
@@ -35,7 +36,7 @@ async function run() {
     
     core.info("Detected .NET Core SDK version '" + output + "'");
 
-    if (fs.existsSync('reportgeneratortool')) {
+    if (fs.existsSync(toolpath)) {
       core.info("ReportGenerator global tool already installed");
     } else {
       core.info("Installing ReportGenerator global tool (https://www.nuget.org/packages/dotnet-reportgenerator-globaltool)");
@@ -46,7 +47,7 @@ async function run() {
       try {
         resultCode = await exec.exec(
           'dotnet',
-          ['tool', 'install', 'dotnet-reportgenerator-globaltool', '--tool-path', 'reportgeneratortool', '--version', VERSION, '--ignore-failed-sources'],
+          ['tool', 'install', 'dotnet-reportgenerator-globaltool', '--tool-path', toolpath, '--version', VERSION, '--ignore-failed-sources'],
           {
             listeners: {
               stdout: (data: Buffer) => {
@@ -94,7 +95,7 @@ async function run() {
       }
 
       resultCode = await exec.exec(
-        'reportgeneratortool/reportgenerator',
+        toolpath + '/reportgenerator',
         args,
         {
           listeners: {
