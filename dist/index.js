@@ -1073,6 +1073,7 @@ function run() {
             core.info("Detecting .NET Core SDK");
             let output = '';
             let resultCode = 0;
+            let toolpath = core.getInput('toolpath');
             try {
                 resultCode = yield exec.exec('dotnet', ['--version'], {
                     listeners: {
@@ -1088,11 +1089,11 @@ function run() {
                 core.info("- name: Setup .NET Core");
                 core.info("  uses: actions/setup-dotnet@v1");
                 core.info("  with");
-                core.info("    dotnet-version: '5.0.202'");
+                core.info("    dotnet-version: '5.0.300'");
                 return;
             }
             core.info("Detected .NET Core SDK version '" + output + "'");
-            if (fs.existsSync('reportgeneratortool')) {
+            if (fs.existsSync(toolpath)) {
                 core.info("ReportGenerator global tool already installed");
             }
             else {
@@ -1100,7 +1101,7 @@ function run() {
                 output = '';
                 resultCode = 0;
                 try {
-                    resultCode = yield exec.exec('dotnet', ['tool', 'install', 'dotnet-reportgenerator-globaltool', '--tool-path', 'reportgeneratortool', '--version', VERSION, '--ignore-failed-sources'], {
+                    resultCode = yield exec.exec('dotnet', ['tool', 'install', 'dotnet-reportgenerator-globaltool', '--tool-path', toolpath, '--version', VERSION, '--ignore-failed-sources'], {
                         listeners: {
                             stdout: (data) => {
                                 output += data.toString();
@@ -1138,7 +1139,7 @@ function run() {
                         args.push(setting.trim());
                     });
                 }
-                resultCode = yield exec.exec('reportgeneratortool/reportgenerator', args, {
+                resultCode = yield exec.exec(toolpath + '/reportgenerator', args, {
                     listeners: {
                         stdout: (data) => {
                             output += data.toString();
