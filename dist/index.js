@@ -1066,7 +1066,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const core = __importStar(__webpack_require__(470));
 const exec = __importStar(__webpack_require__(986));
 const fs = __importStar(__webpack_require__(747));
-const VERSION = '4.8.12';
+const VERSION = '5.0.0';
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
@@ -1089,7 +1089,7 @@ function run() {
                 core.info("- name: Setup .NET Core");
                 core.info("  uses: actions/setup-dotnet@v1");
                 core.info("  with");
-                core.info("    dotnet-version: '5.0.301'");
+                core.info("    dotnet-version: '6.0.100'");
                 return;
             }
             core.info("Detected .NET Core SDK version '" + output + "'");
