@@ -8,10 +8,10 @@
 - name: Setup .NET Core # Required to execute ReportGenerator
   uses: actions/setup-dotnet@v1
   with:
-    dotnet-version: 6.0.100
+    dotnet-version: 6.0.101
 
 - name: ReportGenerator
-  uses: danielpalme/ReportGenerator-GitHub-Action@5.0.0
+  uses: danielpalme/ReportGenerator-GitHub-Action@5.0.2
   with:
     reports: 'coverage.xml' # REQUIRED # The coverage reports that should be parsed (separated by semicolon). Globbing is supported.
     targetdir: 'coveragereport' # REQUIRED # The directory where the generated report should be saved.
