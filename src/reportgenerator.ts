@@ -83,7 +83,8 @@ async function run() {
         '-filefilters:' + (core.getInput('filefilters') || ''),
         '-verbosity:' + (core.getInput('verbosity') || ''),
         '-title:' + (core.getInput('title') || ''),
-        '-tag:' + (core.getInput('tag') || '')
+        '-tag:' + (core.getInput('tag') || ''),
+        '-license:' + (core.getInput('license') || '')
       ];
 
       const customSettings = (core.getInput('customSettings') || '');

@@ -54,6 +54,10 @@ inputs:
     description: 'Optional tag or build version.'
     required: false
     default: '${{ github.run_number }}_${{ github.run_id }}'
+  license:
+    description: 'Optional license. Get your license here: https://danielpalme.github.io/ReportGenerator/pro'
+    required: false
+    default: ''
   customSettings:
     description: 'Optional custom settings (separated by semicolon). See: https://github.com/danielpalme/ReportGenerator/wiki/Settings'
     required: false
