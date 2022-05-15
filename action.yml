@@ -55,7 +55,7 @@ inputs:
     required: false
     default: '${{ github.run_number }}_${{ github.run_id }}'
   license:
-    description: 'Optional license for PRO version. Get your license here: https://danielpalme.github.io/ReportGenerator/pro'
+    description: 'Optional license for PRO version. Get your license here: https://reportgenerator.io/pro'
     required: false
     default: ''
   customSettings:

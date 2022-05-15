@@ -8,10 +8,10 @@
 - name: Setup .NET Core # Required to execute ReportGenerator
   uses: actions/setup-dotnet@v1
   with:
-    dotnet-version: 6.0.202
+    dotnet-version: 6.0.300
 
 - name: ReportGenerator
-  uses: danielpalme/ReportGenerator-GitHub-Action@5.1.6
+  uses: danielpalme/ReportGenerator-GitHub-Action@5.1.7
   with:
     reports: 'coverage.xml' # REQUIRED # The coverage reports that should be parsed (separated by semicolon). Globbing is supported.
     targetdir: 'coveragereport' # REQUIRED # The directory where the generated report should be saved.
@@ -25,7 +25,7 @@
     verbosity: 'Info' # The verbosity level of the log messages. Values: Verbose, Info, Warning, Error, Off
     title: '' # Optional title.
     tag: '${{ github.run_number }}_${{ github.run_id }}' # Optional tag or build version.
-    license: '' # Optional license for PRO version. Get your license here: https://danielpalme.github.io/ReportGenerator/pro
+    license: '' # Optional license for PRO version. Get your license here: https://reportgenerator.io/pro
     customSettings: '' # Optional custom settings (separated by semicolon). See: https://github.com/danielpalme/ReportGenerator/wiki/Settings.
     toolpath: 'reportgeneratortool' # Default directory for installing the dotnet tool.
 
