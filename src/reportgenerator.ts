@@ -28,9 +28,10 @@ async function run() {
       core.setFailed(".NET Core SDK is not available.");
       core.info("Please install with the following command in your YAML file:");
       core.info("- name: Setup .NET Core");
-      core.info("  uses: actions/setup-dotnet@v1");
+      core.info("  uses: actions/setup-dotnet@v3");
       core.info("  with");
-      core.info("    dotnet-version: '6.0.400'");
+      core.info("    dotnet-version: 6.x");
+      core.info("    dotnet-quality: 'ga'");
       return;
     }
     
@@ -112,7 +113,7 @@ async function run() {
     }
 
     core.info("Successfully executed ReportGenerator");
-  } catch (error) {
+  } catch (error: any) {
     core.setFailed(error.message);
   }
 }
