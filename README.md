@@ -13,7 +13,7 @@ Use the online [configuration tool](https://reportgenerator.io/usage) to get sta
     dotnet-quality: 'ga'
 
 - name: ReportGenerator
-  uses: danielpalme/ReportGenerator-GitHub-Action@5.1.14
+  uses: danielpalme/ReportGenerator-GitHub-Action@5.1.15
   with:
     reports: 'coverage.xml' # REQUIRED # The coverage reports that should be parsed (separated by semicolon). Globbing is supported.
     targetdir: 'coveragereport' # REQUIRED # The directory where the generated report should be saved.
