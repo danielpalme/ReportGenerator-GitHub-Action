@@ -11,7 +11,7 @@ inputs:
     required: true
     default: 'coveragereport'
   reporttypes:
-    description: 'The output formats and scope (separated by semicolon) Values: Badges, Clover, Cobertura, CsvSummary, Html, HtmlChart, HtmlInline, HtmlInline_AzurePipelines, HtmlInline_AzurePipelines_Dark, HtmlSummary, JsonSummary, Latex, LatexSummary, lcov, MHtml, PngChart, SonarQube, TeamCitySummary, TextSummary, Xml, XmlSummary'
+    description: 'The output formats and scope (separated by semicolon) Values: Badges, Clover, Cobertura, CsvSummary, Html, HtmlChart, HtmlInline, HtmlInline_AzurePipelines, HtmlInline_AzurePipelines_Dark, HtmlSummary, JsonSummary, Latex, LatexSummary, lcov, MHtml, SvgChart, SonarQube, TeamCitySummary, TextSummary, Xml, XmlSummary'
     required: false
     default: 'HtmlInline;Cobertura'
   sourcedirs:
