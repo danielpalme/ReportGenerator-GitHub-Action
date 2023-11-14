@@ -9,11 +9,11 @@ Use the online [configuration tool](https://reportgenerator.io/usage) to get sta
 - name: Setup .NET Core # Required to execute ReportGenerator
   uses: actions/setup-dotnet@v3
   with:
-    dotnet-version: 6.x
+    dotnet-version: 8.x
     dotnet-quality: 'ga'
 
 - name: ReportGenerator
-  uses: danielpalme/ReportGenerator-GitHub-Action@5.1.26
+  uses: danielpalme/ReportGenerator-GitHub-Action@5.2.0
   with:
     reports: 'coverage.xml' # REQUIRED # The coverage reports that should be parsed (separated by semicolon). Globbing is supported.
     targetdir: 'coveragereport' # REQUIRED # The directory where the generated report should be saved.
