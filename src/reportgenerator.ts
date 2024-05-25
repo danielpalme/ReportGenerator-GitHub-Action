@@ -2,7 +2,7 @@ import * as core from '@actions/core';
 import * as exec from '@actions/exec';
 import * as fs from 'fs';
 
-const VERSION = '5.3.0';
+const VERSION = '5.3.4';
 
 async function run() {
   try {
@@ -82,12 +82,14 @@ async function run() {
         '-assemblyfilters:' + (core.getInput('assemblyfilters') || ''),
         '-classfilters:' + (core.getInput('classfilters') || ''),
         '-filefilters:' + (core.getInput('filefilters') || ''),
+        '-riskhotspotassemblyfilters:' + (core.getInput('riskhotspotassemblyfilters') || ''),
+        '-riskhotspotclassfilters:' + (core.getInput('riskhotspotclassfilters') || ''),
         '-verbosity:' + (core.getInput('verbosity') || ''),
         '-title:' + (core.getInput('title') || ''),
         '-tag:' + (core.getInput('tag') || ''),
         '-license:' + (core.getInput('license') || '')
       ];
-
+      
       const customSettings = (core.getInput('customSettings') || '');
 
       if (customSettings.length > 0) {

@@ -42,6 +42,14 @@ inputs:
     description: 'Optional list of files that should be included or excluded in the report. Exclusion filters take precedence over inclusion filters. Wildcards are allowed.'
     required: false
     default: '+*'
+  riskhotspotassemblyfilters:
+    description: 'Optional list of assemblies that should be included or excluded in the risk hotspots. Exclusion filters take precedence over inclusion filters. Wildcards are allowed.'
+    required: false
+    default: '+*'
+  riskhotspotclassfilters:
+    description: 'Optional list of classes that should be included or excluded in the risk hotspots. Exclusion filters take precedence over inclusion filters. Wildcards are allowed.'
+    required: false
+    default: '+*'
   verbosity:
     description: 'The verbosity level of the log messages. Values: Verbose, Info, Warning, Error, Off'
     required: false
