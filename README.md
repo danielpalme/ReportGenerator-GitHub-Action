@@ -8,7 +8,7 @@ The more advanced settings are documented in the [wiki](https://github.com/danie
 
 ```yml
 - name: Setup .NET Core # Required to execute ReportGenerator
-  uses: actions/setup-dotnet@v3
+  uses: actions/setup-dotnet@v4
   with:
     dotnet-version: 8.x
     dotnet-quality: 'ga'
@@ -35,7 +35,7 @@ The more advanced settings are documented in the [wiki](https://github.com/danie
     toolpath: 'reportgeneratortool' # Default directory for installing the dotnet tool.
 
 - name: Upload coverage report artifact
-  uses: actions/upload-artifact@v2.2.3
+  uses: actions/upload-artifact@v4
   with:
     name: CoverageReport # Artifact name        
     path: coveragereport # Directory containing files to upload
