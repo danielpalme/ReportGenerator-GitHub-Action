@@ -13,5 +13,6 @@ Write-Host $To
 npm run build
 
 git commit -a -m $To
+git tag -f v$To
 git tag -f v5
 git tag -f 5
