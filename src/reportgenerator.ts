@@ -93,7 +93,7 @@ async function run() {
       const customSettings = (core.getInput('customSettings') || '');
 
       if (customSettings.length > 0) {
-          customSettings.split(';').forEach(setting => {
+          customSettings.split(/[,;]/).forEach(setting => {
               args.push(setting.trim());
           });
       }
