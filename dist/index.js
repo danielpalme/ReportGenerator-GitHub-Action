@@ -52,7 +52,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 const core = __importStar(__nccwpck_require__(7484));
 const exec = __importStar(__nccwpck_require__(5236));
 const fs = __importStar(__nccwpck_require__(9896));
-const VERSION = '5.4.3';
+const VERSION = '5.4.4';
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
