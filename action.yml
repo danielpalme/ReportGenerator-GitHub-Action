@@ -22,6 +22,10 @@ inputs:
     description: 'Optional directory for storing persistent coverage information. Can be used in future reports to show coverage evolution.'
     required: false
     default: ''
+  workingdir:
+    description: 'Optional working directory. If available, the targetdir and historydir are interpreted relative to the working directory (only if not specified as absolute paths).'
+    required: false
+    default: ''
   toolpath:
     description: 'Default directory for installing the dotnet tool.'
     required: false

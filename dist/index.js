@@ -52,6 +52,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 const core = __importStar(__nccwpck_require__(7484));
 const exec = __importStar(__nccwpck_require__(5236));
 const fs = __importStar(__nccwpck_require__(9896));
+const path = __importStar(__nccwpck_require__(6928));
 const VERSION = '5.4.4';
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
@@ -106,12 +107,25 @@ function run() {
             output = '';
             resultCode = 0;
             try {
-                let args = [
+                const workingdir = (core.getInput('workingdir') || '').trim();
+                let targetdir = (core.getInput('targetdir') || '');
+                let historydir = (core.getInput('historydir') || '');
+                if (workingdir.length > 0) {
+                    if (targetdir.length > 0 && !path.isAbsolute(targetdir)) {
+                        targetdir = path.join(workingdir, targetdir);
+                        return;
+                    }
+                    if (historydir.length > 0 && !path.isAbsolute(historydir)) {
+                        historydir = path.join(workingdir, historydir);
+                        return;
+                    }
+                }
+                const args = [
                     '-reports:' + (core.getInput('reports') || ''),
-                    '-targetdir:' + (core.getInput('targetdir') || ''),
+                    '-targetdir:' + targetdir,
                     '-reporttypes:' + (core.getInput('reporttypes') || ''),
                     '-sourcedirs:' + (core.getInput('sourcedirs') || ''),
-                    '-historydir:' + (core.getInput('historydir') || ''),
+                    '-historydir:' + historydir,
                     '-plugins:' + (core.getInput('plugins') || ''),
                     '-assemblyfilters:' + (core.getInput('assemblyfilters') || ''),
                     '-classfilters:' + (core.getInput('classfilters') || ''),

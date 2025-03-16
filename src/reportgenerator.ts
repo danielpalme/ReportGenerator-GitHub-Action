@@ -1,6 +1,7 @@
 import * as core from '@actions/core';
 import * as exec from '@actions/exec';
 import * as fs from 'fs';
+import * as path from 'path';
 
 const VERSION = '5.4.4';
 
@@ -72,12 +73,28 @@ async function run() {
     resultCode = 0;
 
     try {
-      let args = [
+      const workingdir = (core.getInput('workingdir') || '').trim();
+
+      let targetdir = (core.getInput('targetdir') || '');
+      let historydir = (core.getInput('historydir') || '');
+
+      if (workingdir.length > 0) {
+        if (targetdir.length > 0 && !path.isAbsolute(targetdir)) {
+          targetdir = path.join(workingdir, targetdir);
+          return;
+        }
+        if (historydir.length > 0 &&!path.isAbsolute(historydir)) {
+          historydir = path.join(workingdir, historydir);
+          return;
+        }
+      }
+
+      const args = [
         '-reports:' + (core.getInput('reports') || ''),
-        '-targetdir:' + (core.getInput('targetdir') || ''),
+        '-targetdir:' + targetdir,
         '-reporttypes:' + (core.getInput('reporttypes') || ''),
         '-sourcedirs:' + (core.getInput('sourcedirs') || ''),
-        '-historydir:' + (core.getInput('historydir') || ''),
+        '-historydir:' + historydir,
         '-plugins:' + (core.getInput('plugins') || ''),
         '-assemblyfilters:' + (core.getInput('assemblyfilters') || ''),
         '-classfilters:' + (core.getInput('classfilters') || ''),
