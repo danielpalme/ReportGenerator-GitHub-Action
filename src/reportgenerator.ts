@@ -77,15 +77,31 @@ async function run() {
 
       let targetdir = (core.getInput('targetdir') || '');
       let historydir = (core.getInput('historydir') || '');
+      let sourcedirs = (core.getInput('sourcedirs') || '');
 
       if (workingdir.length > 0) {
         if (targetdir.length > 0 && !path.isAbsolute(targetdir)) {
           targetdir = path.join(workingdir, targetdir);
-          return;
         }
         if (historydir.length > 0 &&!path.isAbsolute(historydir)) {
           historydir = path.join(workingdir, historydir);
-          return;
+        }
+        if (sourcedirs.length > 0) {
+          let updatedSourcedirs = '';
+
+          sourcedirs.split(/[,;]/).forEach(sourcedir => {
+            if (!path.isAbsolute(sourcedir)) {
+              sourcedir = path.join(workingdir, sourcedir);
+            }
+
+            if (updatedSourcedirs.length > 0) {
+              updatedSourcedirs += ';';
+            }
+
+            updatedSourcedirs += sourcedir;
+          });
+
+          sourcedirs = updatedSourcedirs;
         }
       }
 
@@ -93,7 +109,7 @@ async function run() {
         '-reports:' + (core.getInput('reports') || ''),
         '-targetdir:' + targetdir,
         '-reporttypes:' + (core.getInput('reporttypes') || ''),
-        '-sourcedirs:' + (core.getInput('sourcedirs') || ''),
+        '-sourcedirs:' + sourcedirs,
         '-historydir:' + historydir,
         '-plugins:' + (core.getInput('plugins') || ''),
         '-assemblyfilters:' + (core.getInput('assemblyfilters') || ''),

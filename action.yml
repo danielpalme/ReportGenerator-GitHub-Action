@@ -23,7 +23,7 @@ inputs:
     required: false
     default: ''
   workingdir:
-    description: 'Optional working directory. If available, the targetdir and historydir are interpreted relative to the working directory (only if not specified as absolute paths).'
+    description: 'Optional working directory. If available, the targetdir, sourcedirs and historydir are interpreted relative to the working directory (only if not specified as absolute paths).'
     required: false
     default: ''
   toolpath:
