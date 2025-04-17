@@ -78,6 +78,7 @@ async function run() {
       let targetdir = (core.getInput('targetdir') || '');
       let historydir = (core.getInput('historydir') || '');
       let sourcedirs = (core.getInput('sourcedirs') || '');
+      let reports = (core.getInput('reports') || '');
 
       if (workingdir.length > 0) {
         if (targetdir.length > 0 && !path.isAbsolute(targetdir)) {
@@ -103,10 +104,27 @@ async function run() {
 
           sourcedirs = updatedSourcedirs;
         }
+        if (reports.length > 0) {
+          let updatedReports = '';
+
+          reports.split(/[,;]/).forEach(report => {
+            if (!path.isAbsolute(report)) {
+              report = path.join(workingdir, report);
+            }
+
+            if (updatedReports.length > 0) {
+              updatedReports += ';';
+            }
+
+            updatedReports += report;
+          });
+
+          reports = updatedReports;
+        }
       }
 
       const args = [
-        '-reports:' + (core.getInput('reports') || ''),
+        '-reports:' + reports,
         '-targetdir:' + targetdir,
         '-reporttypes:' + (core.getInput('reporttypes') || ''),
         '-sourcedirs:' + sourcedirs,
