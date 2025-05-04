@@ -53,7 +53,7 @@ const core = __importStar(__nccwpck_require__(7484));
 const exec = __importStar(__nccwpck_require__(5236));
 const fs = __importStar(__nccwpck_require__(9896));
 const path = __importStar(__nccwpck_require__(6928));
-const VERSION = '5.4.5';
+const VERSION = '5.4.6';
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
@@ -111,6 +111,7 @@ function run() {
                 let targetdir = (core.getInput('targetdir') || '');
                 let historydir = (core.getInput('historydir') || '');
                 let sourcedirs = (core.getInput('sourcedirs') || '');
+                let reports = (core.getInput('reports') || '');
                 if (workingdir.length > 0) {
                     if (targetdir.length > 0 && !path.isAbsolute(targetdir)) {
                         targetdir = path.join(workingdir, targetdir);
@@ -131,9 +132,22 @@ function run() {
                         });
                         sourcedirs = updatedSourcedirs;
                     }
+                    if (reports.length > 0) {
+                        let updatedReports = '';
+                        reports.split(/[,;]/).forEach(report => {
+                            if (!path.isAbsolute(report)) {
+                                report = path.join(workingdir, report);
+                            }
+                            if (updatedReports.length > 0) {
+                                updatedReports += ';';
+                            }
+                            updatedReports += report;
+                        });
+                        reports = updatedReports;
+                    }
                 }
                 const args = [
-                    '-reports:' + (core.getInput('reports') || ''),
+                    '-reports:' + reports,
                     '-targetdir:' + targetdir,
                     '-reporttypes:' + (core.getInput('reporttypes') || ''),
                     '-sourcedirs:' + sourcedirs,
