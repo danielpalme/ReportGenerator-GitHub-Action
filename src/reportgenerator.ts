@@ -45,24 +45,37 @@ async function run() {
 
       output = '';
       resultCode = 0;
-  
-      try {
-        resultCode = await exec.exec(
-          'dotnet',
-          ['tool', 'install', 'dotnet-reportgenerator-globaltool', '--tool-path', toolpath, '--version', VERSION, '--ignore-failed-sources'],
-          {
-            listeners: {
-              stdout: (data: Buffer) => {
-                output += data.toString();
+
+      const maxRetries = 3;
+      let attempt = 0;
+      let success = false;
+
+      while (attempt < maxRetries && !success) {
+        try {
+          resultCode = await exec.exec(
+            'dotnet',
+            ['tool', 'install', 'dotnet-reportgenerator-globaltool', '--tool-path', toolpath, '--version', VERSION, '--ignore-failed-sources'],
+            {
+              listeners: {
+                stdout: (data: Buffer) => {
+                  output += data.toString();
+                }
               }
             }
+          );
+          success = true;
+        } catch (error) {
+          attempt++;
+          core.info(`Attempt ${attempt} to install ReportGenerator failed.`);
+          if (attempt >= maxRetries) {
+            core.setFailed("Failed to install ReportGenerator global tool after multiple attempts");
+            return;
           }
-        );
-      } catch (error) {
-        core.setFailed("Failed to install ReportGenerator global tool");
-        return;
+          core.info("Retrying in 10 seconds...");
+          await new Promise(resolve => setTimeout(resolve, 10000));
+        }
       }
-  
+
       core.info("Successfully installed ReportGenerator global tool");
     }
     
