@@ -43,7 +43,7 @@ The more advanced settings are documented in the [wiki](https://github.com/danie
 
 - name: Add comment to PR # Only applicable if 'MarkdownSummaryGithub' or one of the other Markdown report types is generated
   if: github.event_name == 'pull_request'
-  run: gh pr comment $PR_NUMBER --body-file coveragereport/SummaryGithub.md # Adjust path and filename if necessary
+  run: gh pr comment $PR_NUMBER --edit-last --create-if-none --body-file coveragereport/SummaryGithub.md # Adjust path and filename if necessary
   env:
     GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     PR_NUMBER: ${{ github.event.number }}
