@@ -53,7 +53,7 @@ const core = __importStar(__nccwpck_require__(7484));
 const exec = __importStar(__nccwpck_require__(5236));
 const fs = __importStar(__nccwpck_require__(9896));
 const path = __importStar(__nccwpck_require__(6928));
-const VERSION = '5.4.11';
+const VERSION = '5.4.12';
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
@@ -88,18 +88,30 @@ function run() {
                 core.info("Installing ReportGenerator global tool (https://www.nuget.org/packages/dotnet-reportgenerator-globaltool)");
                 output = '';
                 resultCode = 0;
-                try {
-                    resultCode = yield exec.exec('dotnet', ['tool', 'install', 'dotnet-reportgenerator-globaltool', '--tool-path', toolpath, '--version', VERSION, '--ignore-failed-sources'], {
-                        listeners: {
-                            stdout: (data) => {
-                                output += data.toString();
+                const maxRetries = 3;
+                let attempt = 0;
+                let success = false;
+                while (attempt < maxRetries && !success) {
+                    try {
+                        resultCode = yield exec.exec('dotnet', ['tool', 'install', 'dotnet-reportgenerator-globaltool', '--tool-path', toolpath, '--version', VERSION, '--ignore-failed-sources'], {
+                            listeners: {
+                                stdout: (data) => {
+                                    output += data.toString();
+                                }
                             }
+                        });
+                        success = true;
+                    }
+                    catch (error) {
+                        attempt++;
+                        core.info(`Attempt ${attempt} to install ReportGenerator failed.`);
+                        if (attempt >= maxRetries) {
+                            core.setFailed("Failed to install ReportGenerator global tool after multiple attempts");
+                            return;
                         }
-                    });
-                }
-                catch (error) {
-                    core.setFailed("Failed to install ReportGenerator global tool");
-                    return;
+                        core.info("Retrying in 10 seconds...");
+                        yield new Promise(resolve => setTimeout(resolve, 10000));
+                    }
                 }
                 core.info("Successfully installed ReportGenerator global tool");
             }
