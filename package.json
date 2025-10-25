@@ -1,6 +1,6 @@
 {
   "name": "ReportGenerator",
-  "version": "5.4.17",
+  "version": "5.4.18",
   "description": "",
   "main": "lib/reportgenerator.js",
   "scripts": {
@@ -20,8 +20,8 @@
     "@actions/exec": "^1.1.1"
   },
   "devDependencies": {
-    "@types/node": "^22.13.0",
-    "@vercel/ncc": "^0.38.3",
-    "typescript": "^5.8.2"
+    "@types/node": "^24.9.1",
+    "@vercel/ncc": "^0.38.4",
+    "typescript": "^5.9.3"
   }
 }
