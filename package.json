@@ -16,8 +16,8 @@
   "author": "danielpalme",
   "license": "Apache-2.0",
   "dependencies": {
-    "@actions/core": "^1.11.1",
-    "@actions/exec": "^1.1.1"
+    "@actions/core": "^2.0.3",
+    "@actions/exec": "^2.0.0"
   },
   "devDependencies": {
     "@types/node": "^24.9.1",
