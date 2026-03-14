@@ -3,7 +3,7 @@ import * as exec from '@actions/exec';
 import * as fs from 'fs';
 import * as path from 'path';
 
-const VERSION = '5.5.3';
+const VERSION = '5.5.4';
 
 async function run() {
   try {
