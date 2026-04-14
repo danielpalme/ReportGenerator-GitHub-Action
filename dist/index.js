@@ -61,6 +61,15 @@ function run() {
             let output = '';
             let resultCode = 0;
             let toolpath = core.getInput('toolpath');
+            const workspace = process.env.GITHUB_WORKSPACE || process.cwd();
+            const resolvedToolpath = path.resolve(workspace, toolpath);
+            const normalizedWorkspace = path.resolve(workspace);
+            if (resolvedToolpath !== normalizedWorkspace
+                && !resolvedToolpath.startsWith(normalizedWorkspace + path.sep)) {
+                core.setFailed(`'toolpath' resolves outside the workspace: ${resolvedToolpath}`);
+                return;
+            }
+            toolpath = resolvedToolpath;
             try {
                 resultCode = yield exec.exec('dotnet', ['--version'], {
                     listeners: {
@@ -119,6 +128,13 @@ function run() {
             output = '';
             resultCode = 0;
             try {
+                const assertWithinWorkspace = (resolvedPath, inputName) => {
+                    const normalizedResolved = path.resolve(resolvedPath);
+                    if (normalizedResolved !== normalizedWorkspace
+                        && !normalizedResolved.startsWith(normalizedWorkspace + path.sep)) {
+                        throw new Error(`Input '${inputName}' resolves outside the workspace: ${resolvedPath}`);
+                    }
+                };
                 const workingdir = (core.getInput('workingdir') || '').trim();
                 let targetdir = (core.getInput('targetdir') || '');
                 let historydir = (core.getInput('historydir') || '');
@@ -158,13 +174,44 @@ function run() {
                         reports = updatedReports;
                     }
                 }
+                if (targetdir.length > 0) {
+                    assertWithinWorkspace(path.resolve(workspace, targetdir), 'targetdir');
+                }
+                if (historydir.length > 0) {
+                    assertWithinWorkspace(path.resolve(workspace, historydir), 'historydir');
+                }
+                if (sourcedirs.length > 0) {
+                    sourcedirs.split(/[;]/).forEach(sourcedir => {
+                        const trimmed = sourcedir.trim();
+                        if (trimmed.length > 0) {
+                            assertWithinWorkspace(path.resolve(workspace, trimmed), 'sourcedirs');
+                        }
+                    });
+                }
+                if (reports.length > 0) {
+                    reports.split(/[;]/).forEach(report => {
+                        const trimmed = report.trim();
+                        if (trimmed.length > 0) {
+                            assertWithinWorkspace(path.resolve(workspace, trimmed), 'reports');
+                        }
+                    });
+                }
+                const plugins = core.getInput('plugins') || '';
+                if (plugins.length > 0) {
+                    plugins.split(/[;]/).forEach(plugin => {
+                        const trimmed = plugin.trim();
+                        if (trimmed.length > 0) {
+                            assertWithinWorkspace(path.resolve(workspace, trimmed), 'plugins');
+                        }
+                    });
+                }
                 const args = [
                     '-reports:' + reports,
                     '-targetdir:' + targetdir,
                     '-reporttypes:' + (core.getInput('reporttypes') || ''),
                     '-sourcedirs:' + sourcedirs,
                     '-historydir:' + historydir,
-                    '-plugins:' + (core.getInput('plugins') || ''),
+                    '-plugins:' + plugins,
                     '-assemblyfilters:' + (core.getInput('assemblyfilters') || ''),
                     '-classfilters:' + (core.getInput('classfilters') || ''),
                     '-filefilters:' + (core.getInput('filefilters') || ''),
@@ -178,10 +225,17 @@ function run() {
                 const customSettings = (core.getInput('customSettings') || '');
                 if (customSettings.length > 0) {
                     customSettings.split(/[,;]/).forEach(setting => {
-                        args.push(setting.trim());
+                        const trimmed = setting.trim();
+                        if (trimmed.length === 0)
+                            return;
+                        if (trimmed.startsWith('-') || !trimmed.includes('=')) {
+                            core.warning(`Skipping invalid custom setting: '${trimmed}'. Expected format: key=value`);
+                            return;
+                        }
+                        args.push(trimmed);
                     });
                 }
-                resultCode = yield exec.exec(toolpath + '/reportgenerator', args, {
+                resultCode = yield exec.exec(path.join(toolpath, 'reportgenerator'), args, {
                     listeners: {
                         stdout: (data) => {
                             output += data.toString();
