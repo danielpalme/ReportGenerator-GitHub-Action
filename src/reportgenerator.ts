@@ -2,6 +2,7 @@ import * as core from '@actions/core';
 import * as exec from '@actions/exec';
 import * as fs from 'fs';
 import * as path from 'path';
+import { assertPathsWithinWorkspace, assertWithinWorkspace, validateCustomSetting } from './sanitize';
 
 const VERSION = '5.5.4';
 
@@ -14,9 +15,9 @@ async function run() {
     let toolpath = core.getInput('toolpath');
     const workspace = process.env.GITHUB_WORKSPACE || process.cwd();
     const resolvedToolpath = path.resolve(workspace, toolpath);
-    const normalizedWorkspace = path.resolve(workspace);
-    if (resolvedToolpath !== normalizedWorkspace
-        && !resolvedToolpath.startsWith(normalizedWorkspace + path.sep)) {
+    try {
+      assertWithinWorkspace(resolvedToolpath, 'toolpath', workspace);
+    } catch {
       core.setFailed(`'toolpath' resolves outside the workspace: ${resolvedToolpath}`);
       return;
     }
@@ -95,14 +96,6 @@ async function run() {
     resultCode = 0;
 
     try {
-      const assertWithinWorkspace = (resolvedPath: string, inputName: string): void => {
-        const normalizedResolved = path.resolve(resolvedPath);
-        if (normalizedResolved !== normalizedWorkspace
-            && !normalizedResolved.startsWith(normalizedWorkspace + path.sep)) {
-          throw new Error(`Input '${inputName}' resolves outside the workspace: ${resolvedPath}`);
-        }
-      };
-
       const workingdir = (core.getInput('workingdir') || '').trim();
 
       let targetdir = (core.getInput('targetdir') || '');
@@ -153,38 +146,12 @@ async function run() {
         }
       }
 
-      if (targetdir.length > 0) {
-        assertWithinWorkspace(path.resolve(workspace, targetdir), 'targetdir');
-      }
-      if (historydir.length > 0) {
-        assertWithinWorkspace(path.resolve(workspace, historydir), 'historydir');
-      }
-      if (sourcedirs.length > 0) {
-        sourcedirs.split(/[;]/).forEach(sourcedir => {
-          const trimmed = sourcedir.trim();
-          if (trimmed.length > 0) {
-            assertWithinWorkspace(path.resolve(workspace, trimmed), 'sourcedirs');
-          }
-        });
-      }
-      if (reports.length > 0) {
-        reports.split(/[;]/).forEach(report => {
-          const trimmed = report.trim();
-          if (trimmed.length > 0) {
-            assertWithinWorkspace(path.resolve(workspace, trimmed), 'reports');
-          }
-        });
-      }
-
       const plugins = core.getInput('plugins') || '';
-      if (plugins.length > 0) {
-        plugins.split(/[;]/).forEach(plugin => {
-          const trimmed = plugin.trim();
-          if (trimmed.length > 0) {
-            assertWithinWorkspace(path.resolve(workspace, trimmed), 'plugins');
-          }
-        });
-      }
+      assertPathsWithinWorkspace(targetdir, 'targetdir', workspace);
+      assertPathsWithinWorkspace(historydir, 'historydir', workspace);
+      assertPathsWithinWorkspace(sourcedirs, 'sourcedirs', workspace);
+      assertPathsWithinWorkspace(reports, 'reports', workspace);
+      assertPathsWithinWorkspace(plugins, 'plugins', workspace);
 
       const args = [
         '-reports:' + reports,
@@ -208,13 +175,15 @@ async function run() {
 
       if (customSettings.length > 0) {
           customSettings.split(/[,;]/).forEach(setting => {
-              const trimmed = setting.trim();
-              if (trimmed.length === 0) return;
-              if (trimmed.startsWith('-') || !trimmed.includes('=')) {
-                core.warning(`Skipping invalid custom setting: '${trimmed}'. Expected format: key=value`);
+              const validated = validateCustomSetting(setting);
+              if (validated === null) {
+                const trimmed = setting.trim();
+                if (trimmed.length > 0) {
+                  core.warning(`Skipping invalid custom setting: '${trimmed}'. Expected format: key=value`);
+                }
                 return;
               }
-              args.push(trimmed);
+              args.push(validated);
           });
       }
 
