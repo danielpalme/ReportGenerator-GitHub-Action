@@ -53,7 +53,8 @@ const core = __importStar(__nccwpck_require__(7484));
 const exec = __importStar(__nccwpck_require__(5236));
 const fs = __importStar(__nccwpck_require__(9896));
 const path = __importStar(__nccwpck_require__(6928));
-const VERSION = '5.5.4';
+const sanitize_1 = __nccwpck_require__(1161);
+const VERSION = '5.5.5';
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
@@ -61,6 +62,16 @@ function run() {
             let output = '';
             let resultCode = 0;
             let toolpath = core.getInput('toolpath');
+            const workspace = process.env.GITHUB_WORKSPACE || process.cwd();
+            const resolvedToolpath = path.resolve(workspace, toolpath);
+            try {
+                (0, sanitize_1.assertWithinWorkspace)(resolvedToolpath, 'toolpath', workspace);
+            }
+            catch (_a) {
+                core.setFailed(`'toolpath' resolves outside the workspace: ${resolvedToolpath}`);
+                return;
+            }
+            toolpath = resolvedToolpath;
             try {
                 resultCode = yield exec.exec('dotnet', ['--version'], {
                     listeners: {
@@ -158,13 +169,19 @@ function run() {
                         reports = updatedReports;
                     }
                 }
+                const plugins = core.getInput('plugins') || '';
+                (0, sanitize_1.assertPathsWithinWorkspace)(targetdir, 'targetdir', workspace);
+                (0, sanitize_1.assertPathsWithinWorkspace)(historydir, 'historydir', workspace);
+                (0, sanitize_1.assertPathsWithinWorkspace)(sourcedirs, 'sourcedirs', workspace);
+                (0, sanitize_1.assertPathsWithinWorkspace)(reports, 'reports', workspace);
+                (0, sanitize_1.assertPathsWithinWorkspace)(plugins, 'plugins', workspace);
                 const args = [
                     '-reports:' + reports,
                     '-targetdir:' + targetdir,
                     '-reporttypes:' + (core.getInput('reporttypes') || ''),
                     '-sourcedirs:' + sourcedirs,
                     '-historydir:' + historydir,
-                    '-plugins:' + (core.getInput('plugins') || ''),
+                    '-plugins:' + plugins,
                     '-assemblyfilters:' + (core.getInput('assemblyfilters') || ''),
                     '-classfilters:' + (core.getInput('classfilters') || ''),
                     '-filefilters:' + (core.getInput('filefilters') || ''),
@@ -178,10 +195,18 @@ function run() {
                 const customSettings = (core.getInput('customSettings') || '');
                 if (customSettings.length > 0) {
                     customSettings.split(/[,;]/).forEach(setting => {
-                        args.push(setting.trim());
+                        const validated = (0, sanitize_1.validateCustomSetting)(setting);
+                        if (validated === null) {
+                            const trimmed = setting.trim();
+                            if (trimmed.length > 0) {
+                                core.warning(`Skipping invalid custom setting: '${trimmed}'. Expected format: key=value`);
+                            }
+                            return;
+                        }
+                        args.push(validated);
                     });
                 }
-                resultCode = yield exec.exec(toolpath + '/reportgenerator', args, {
+                resultCode = yield exec.exec(path.join(toolpath, 'reportgenerator'), args, {
                     listeners: {
                         stdout: (data) => {
                             output += data.toString();
@@ -201,6 +226,79 @@ function run() {
     });
 }
 run();
+
+
+/***/ }),
+
+/***/ 1161:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || (function () {
+    var ownKeys = function(o) {
+        ownKeys = Object.getOwnPropertyNames || function (o) {
+            var ar = [];
+            for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) ar[ar.length] = k;
+            return ar;
+        };
+        return ownKeys(o);
+    };
+    return function (mod) {
+        if (mod && mod.__esModule) return mod;
+        var result = {};
+        if (mod != null) for (var k = ownKeys(mod), i = 0; i < k.length; i++) if (k[i] !== "default") __createBinding(result, mod, k[i]);
+        __setModuleDefault(result, mod);
+        return result;
+    };
+})();
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.assertWithinWorkspace = assertWithinWorkspace;
+exports.assertPathsWithinWorkspace = assertPathsWithinWorkspace;
+exports.validateCustomSetting = validateCustomSetting;
+const path = __importStar(__nccwpck_require__(6928));
+function assertWithinWorkspace(resolvedPath, inputName, workspace) {
+    const normalizedResolved = path.resolve(resolvedPath);
+    const normalizedWorkspace = path.resolve(workspace);
+    if (normalizedResolved !== normalizedWorkspace
+        && !normalizedResolved.startsWith(normalizedWorkspace + path.sep)) {
+        throw new Error(`Input '${inputName}' resolves outside the workspace: ${resolvedPath}`);
+    }
+}
+function assertPathsWithinWorkspace(value, inputName, workspace) {
+    value.split(/[;]/).forEach(segment => {
+        const trimmed = segment.trim();
+        if (trimmed.length > 0) {
+            assertWithinWorkspace(path.resolve(workspace, trimmed), inputName, workspace);
+        }
+    });
+}
+function validateCustomSetting(setting) {
+    const trimmed = setting.trim();
+    if (trimmed.length === 0) {
+        return null;
+    }
+    if (trimmed.startsWith('-') || !trimmed.includes('=')) {
+        return null;
+    }
+    return trimmed;
+}
 
 
 /***/ }),
