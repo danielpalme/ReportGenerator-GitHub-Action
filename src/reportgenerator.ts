@@ -2,6 +2,7 @@ import * as core from '@actions/core';
 import * as exec from '@actions/exec';
 import * as fs from 'fs';
 import * as path from 'path';
+import { assertPathsWithinWorkspace, assertWithinWorkspace, validateCustomSetting } from './sanitize';
 
 const VERSION = '5.5.4';
 
@@ -12,6 +13,15 @@ async function run() {
     let output = '';
     let resultCode = 0;
     let toolpath = core.getInput('toolpath');
+    const workspace = process.env.GITHUB_WORKSPACE || process.cwd();
+    const resolvedToolpath = path.resolve(workspace, toolpath);
+    try {
+      assertWithinWorkspace(resolvedToolpath, 'toolpath', workspace);
+    } catch {
+      core.setFailed(`'toolpath' resolves outside the workspace: ${resolvedToolpath}`);
+      return;
+    }
+    toolpath = resolvedToolpath;
 
     try {
       resultCode = await exec.exec(
@@ -136,13 +146,20 @@ async function run() {
         }
       }
 
+      const plugins = core.getInput('plugins') || '';
+      assertPathsWithinWorkspace(targetdir, 'targetdir', workspace);
+      assertPathsWithinWorkspace(historydir, 'historydir', workspace);
+      assertPathsWithinWorkspace(sourcedirs, 'sourcedirs', workspace);
+      assertPathsWithinWorkspace(reports, 'reports', workspace);
+      assertPathsWithinWorkspace(plugins, 'plugins', workspace);
+
       const args = [
         '-reports:' + reports,
         '-targetdir:' + targetdir,
         '-reporttypes:' + (core.getInput('reporttypes') || ''),
         '-sourcedirs:' + sourcedirs,
         '-historydir:' + historydir,
-        '-plugins:' + (core.getInput('plugins') || ''),
+        '-plugins:' + plugins,
         '-assemblyfilters:' + (core.getInput('assemblyfilters') || ''),
         '-classfilters:' + (core.getInput('classfilters') || ''),
         '-filefilters:' + (core.getInput('filefilters') || ''),
@@ -158,12 +175,20 @@ async function run() {
 
       if (customSettings.length > 0) {
           customSettings.split(/[,;]/).forEach(setting => {
-              args.push(setting.trim());
+              const validated = validateCustomSetting(setting);
+              if (validated === null) {
+                const trimmed = setting.trim();
+                if (trimmed.length > 0) {
+                  core.warning(`Skipping invalid custom setting: '${trimmed}'. Expected format: key=value`);
+                }
+                return;
+              }
+              args.push(validated);
           });
       }
 
       resultCode = await exec.exec(
-        toolpath + '/reportgenerator',
+        path.join(toolpath, 'reportgenerator'),
         args,
         {
           listeners: {
