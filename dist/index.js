@@ -54,7 +54,7 @@ const exec = __importStar(__nccwpck_require__(5236));
 const fs = __importStar(__nccwpck_require__(9896));
 const path = __importStar(__nccwpck_require__(6928));
 const sanitize_1 = __nccwpck_require__(1161);
-const VERSION = '5.5.5';
+const VERSION = '5.5.6';
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
