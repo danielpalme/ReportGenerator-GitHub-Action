@@ -1,11 +1,15 @@
 import * as path from 'path';
 
-export function assertWithinWorkspace(resolvedPath: string, inputName: string, workspace: string): void {
+export function assertWithinWorkspaceOrTempDirectory(resolvedPath: string, inputName: string, workspace: string): void {
   const normalizedResolved = path.resolve(resolvedPath);
   const normalizedWorkspace = path.resolve(workspace);
-  if (normalizedResolved !== normalizedWorkspace
-      && !normalizedResolved.startsWith(normalizedWorkspace + path.sep)) {
-    throw new Error(`Input '${inputName}' resolves outside the workspace: ${resolvedPath}`);
+
+  const runnerTemp = process.env.RUNNER_TEMP;
+  const normalizedRunnerTemp = runnerTemp ? path.resolve(runnerTemp) : null;
+
+  if (!isWithinPath(normalizedResolved, normalizedWorkspace)
+    && !isWithinPath(normalizedResolved, normalizedRunnerTemp)) {
+    throw new Error(`Input '${inputName}' resolves outside the workspace and temp directory: ${resolvedPath}`);
   }
 }
 
@@ -13,7 +17,7 @@ export function assertPathsWithinWorkspace(value: string, inputName: string, wor
   value.split(/[;]/).forEach(segment => {
     const trimmed = segment.trim();
     if (trimmed.length > 0) {
-      assertWithinWorkspace(path.resolve(workspace, trimmed), inputName, workspace);
+      assertWithinWorkspaceOrTempDirectory(path.resolve(workspace, trimmed), inputName, workspace);
     }
   });
 }
@@ -29,4 +33,12 @@ export function validateCustomSetting(setting: string): string | null {
   }
 
   return trimmed;
+}
+
+function isWithinPath(normalizedPath: string|null, normalizedTargetPath: string|null): boolean {
+  if (normalizedPath === null || normalizedTargetPath === null) {
+    return false;
+  }
+
+  return normalizedPath === normalizedTargetPath || normalizedPath.startsWith(normalizedTargetPath + path.sep);
 }

@@ -65,7 +65,7 @@ function run() {
             const workspace = process.env.GITHUB_WORKSPACE || process.cwd();
             const resolvedToolpath = path.resolve(workspace, toolpath);
             try {
-                (0, sanitize_1.assertWithinWorkspace)(resolvedToolpath, 'toolpath', workspace);
+                (0, sanitize_1.assertWithinWorkspaceOrTempDirectory)(resolvedToolpath, 'toolpath', workspace);
             }
             catch (_a) {
                 core.setFailed(`'toolpath' resolves outside the workspace: ${resolvedToolpath}`);
@@ -269,23 +269,25 @@ var __importStar = (this && this.__importStar) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.assertWithinWorkspace = assertWithinWorkspace;
+exports.assertWithinWorkspaceOrTempDirectory = assertWithinWorkspaceOrTempDirectory;
 exports.assertPathsWithinWorkspace = assertPathsWithinWorkspace;
 exports.validateCustomSetting = validateCustomSetting;
 const path = __importStar(__nccwpck_require__(6928));
-function assertWithinWorkspace(resolvedPath, inputName, workspace) {
+function assertWithinWorkspaceOrTempDirectory(resolvedPath, inputName, workspace) {
     const normalizedResolved = path.resolve(resolvedPath);
     const normalizedWorkspace = path.resolve(workspace);
-    if (normalizedResolved !== normalizedWorkspace
-        && !normalizedResolved.startsWith(normalizedWorkspace + path.sep)) {
-        throw new Error(`Input '${inputName}' resolves outside the workspace: ${resolvedPath}`);
+    const runnerTemp = process.env.RUNNER_TEMP;
+    const normalizedRunnerTemp = runnerTemp ? path.resolve(runnerTemp) : null;
+    if (!isWithinPath(normalizedResolved, normalizedWorkspace)
+        && !isWithinPath(normalizedResolved, normalizedRunnerTemp)) {
+        throw new Error(`Input '${inputName}' resolves outside the workspace and temp directory: ${resolvedPath}`);
     }
 }
 function assertPathsWithinWorkspace(value, inputName, workspace) {
     value.split(/[;]/).forEach(segment => {
         const trimmed = segment.trim();
         if (trimmed.length > 0) {
-            assertWithinWorkspace(path.resolve(workspace, trimmed), inputName, workspace);
+            assertWithinWorkspaceOrTempDirectory(path.resolve(workspace, trimmed), inputName, workspace);
         }
     });
 }
@@ -298,6 +300,12 @@ function validateCustomSetting(setting) {
         return null;
     }
     return trimmed;
+}
+function isWithinPath(normalizedPath, normalizedTargetPath) {
+    if (normalizedPath === null || normalizedTargetPath === null) {
+        return false;
+    }
+    return normalizedPath === normalizedTargetPath || normalizedPath.startsWith(normalizedTargetPath + path.sep);
 }
 
 

@@ -2,7 +2,7 @@ import * as core from '@actions/core';
 import * as exec from '@actions/exec';
 import * as fs from 'fs';
 import * as path from 'path';
-import { assertPathsWithinWorkspace, assertWithinWorkspace, validateCustomSetting } from './sanitize';
+import { assertPathsWithinWorkspace, assertWithinWorkspaceOrTempDirectory, validateCustomSetting } from './sanitize';
 
 const VERSION = '5.5.5';
 
@@ -16,7 +16,7 @@ async function run() {
     const workspace = process.env.GITHUB_WORKSPACE || process.cwd();
     const resolvedToolpath = path.resolve(workspace, toolpath);
     try {
-      assertWithinWorkspace(resolvedToolpath, 'toolpath', workspace);
+      assertWithinWorkspaceOrTempDirectory(resolvedToolpath, 'toolpath', workspace);
     } catch {
       core.setFailed(`'toolpath' resolves outside the workspace: ${resolvedToolpath}`);
       return;
