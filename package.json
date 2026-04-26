@@ -1,6 +1,6 @@
 {
   "name": "ReportGenerator",
-  "version": "5.5.6",
+  "version": "5.5.7",
   "description": "",
   "main": "lib/reportgenerator.js",
   "scripts": {
