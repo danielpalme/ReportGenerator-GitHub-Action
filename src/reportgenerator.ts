@@ -147,11 +147,17 @@ async function run() {
       }
 
       const plugins = core.getInput('plugins') || '';
-      assertPathsWithinWorkspace(targetdir, 'targetdir', workspace);
-      assertPathsWithinWorkspace(historydir, 'historydir', workspace);
-      assertPathsWithinWorkspace(sourcedirs, 'sourcedirs', workspace);
-      assertPathsWithinWorkspace(reports, 'reports', workspace);
-      assertPathsWithinWorkspace(plugins, 'plugins', workspace);
+
+      try {
+        assertPathsWithinWorkspace(targetdir, 'targetdir', workspace);
+        assertPathsWithinWorkspace(historydir, 'historydir', workspace);
+        assertPathsWithinWorkspace(sourcedirs, 'sourcedirs', workspace);
+        assertPathsWithinWorkspace(reports, 'reports', workspace);
+        assertPathsWithinWorkspace(plugins, 'plugins', workspace);
+      } catch (error: any) {
+        core.setFailed(error.message);
+        return;
+      }
 
       const args = [
         '-reports:' + reports,

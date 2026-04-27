@@ -170,11 +170,17 @@ function run() {
                     }
                 }
                 const plugins = core.getInput('plugins') || '';
-                (0, sanitize_1.assertPathsWithinWorkspace)(targetdir, 'targetdir', workspace);
-                (0, sanitize_1.assertPathsWithinWorkspace)(historydir, 'historydir', workspace);
-                (0, sanitize_1.assertPathsWithinWorkspace)(sourcedirs, 'sourcedirs', workspace);
-                (0, sanitize_1.assertPathsWithinWorkspace)(reports, 'reports', workspace);
-                (0, sanitize_1.assertPathsWithinWorkspace)(plugins, 'plugins', workspace);
+                try {
+                    (0, sanitize_1.assertPathsWithinWorkspace)(targetdir, 'targetdir', workspace);
+                    (0, sanitize_1.assertPathsWithinWorkspace)(historydir, 'historydir', workspace);
+                    (0, sanitize_1.assertPathsWithinWorkspace)(sourcedirs, 'sourcedirs', workspace);
+                    (0, sanitize_1.assertPathsWithinWorkspace)(reports, 'reports', workspace);
+                    (0, sanitize_1.assertPathsWithinWorkspace)(plugins, 'plugins', workspace);
+                }
+                catch (error) {
+                    core.setFailed(error.message);
+                    return;
+                }
                 const args = [
                     '-reports:' + reports,
                     '-targetdir:' + targetdir,
