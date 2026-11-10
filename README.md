@@ -10,7 +10,7 @@ The more advanced settings are documented in the [wiki](https://github.com/danie
 - name: Setup .NET Core # Required to execute ReportGenerator
   uses: actions/setup-dotnet@v4
   with:
-    dotnet-version: 8.x
+    dotnet-version: 10.x
     dotnet-quality: 'ga'
 
 - name: ReportGenerator
