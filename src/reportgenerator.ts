@@ -4,7 +4,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { assertPathsWithinWorkspace, assertWithinWorkspaceOrTempDirectory, validateCustomSetting } from './sanitize';
 
-const VERSION = '5.5.12';
+const VERSION = '5.6.0';
 
 async function run() {
   try {
